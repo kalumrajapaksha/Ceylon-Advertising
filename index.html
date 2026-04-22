@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ceylon Advertising — Premium Advertising Solutions</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      fontFamily: {
+        display: ['Playfair Display', 'serif'],
+        body: ['Manrope', 'sans-serif'],
+        heading: ['Inter', 'sans-serif'],
+      },
+      colors: {
+        brand: {
+          50: '#fff7ed',
+          100: '#ffedd5',
+          200: '#fed7aa',
+          300: '#fdba74',
+          400: '#fb923c',
+          500: '#f97316',
+          600: '#ea580c',
+          700: '#c2410c',
+          800: '#9a3412',
+          900: '#7c2d12',
+        },
+        cream: {
+          50: '#fefcf8',
+          100: '#fdf8ee',
+          200: '#faf0d8',
+          300: '#f5e4bb',
+          400: '#edd49a',
+        }
+      }
+    }
+  }
+}
+</script>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Manrope', sans-serif; background: #fff9f2; color: #3d2b1a; overflow-x: hidden; }
+
+  /* Subtle warm noise */
+  .noise-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 9999; pointer-events: none; opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  }
+
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: #fff9f2; }
+  ::-webkit-scrollbar-thumb { background: rgba(249,115,22,0.25); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(249,115,22,0.45); }
+
+  @keyframes slideUpFade {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes scaleReveal {
+    from { opacity: 0; transform: scale(1.05); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  @keyframes breathe {
+    0%, 100% { opacity: 0.4; }
+    50% { opacity: 1; }
+  }
+  @keyframes slow-zoom {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+  @keyframes shine {
+    0% { background-position: 200% center; }
+    100% { background-position: -200% center; }
+  }
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  @keyframes rotate-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .animate-slide-up { animation: slideUpFade 1s cubic-bezier(0.16,1,0.3,1) forwards; opacity: 0; }
+  .animate-scale-reveal { animation: scaleReveal 1.5s cubic-bezier(0.16,1,0.3,1) forwards; opacity: 0; }
+  .animate-float { animation: float 6s ease-in-out infinite; }
+  .animate-breathe { animation: breathe 4s ease-in-out infinite; }
+  .animate-slow-zoom { animation: slow-zoom 20s ease-in-out infinite; }
+  .delay-100 { animation-delay: 0.1s; }
+  .delay-200 { animation-delay: 0.2s; }
+  .delay-300 { animation-delay: 0.3s; }
+  .delay-400 { animation-delay: 0.4s; }
+  .delay-500 { animation-delay: 0.5s; }
+  .delay-600 { animation-delay: 0.6s; }
+  .delay-700 { animation-delay: 0.7s; }
+  .delay-800 { animation-delay: 0.8s; }
+
+  .shine-text {
+    background: linear-gradient(90deg, #ea580c, #f97316, #c2410c, #f97316, #ea580c);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shine 4s linear infinite;
+  }
+
+  .marquee-track { animation: scroll 40s linear infinite; }
+  .marquee-track:hover { animation-play-state: paused; }
+
+  .glass-card {
+    background: rgba(255,255,255,0.7);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(249,115,22,0.08);
+    transition: all 0.5s cubic-bezier(0.16,1,0.3,1);
+  }
+  .glass-card:hover {
+    border-color: rgba(249,115,22,0.2);
+    box-shadow: 0 20px 60px -20px rgba(249,115,22,0.15), 0 0 0 1px rgba(249,115,22,0.05);
+    transform: translateY(-4px);
+  }
+
+  .service-line {
+    width: 0; height: 2px;
+    background: linear-gradient(to right, #f97316, transparent);
+    transition: width 0.6s cubic-bezier(0.16,1,0.3,1);
+  }
+  .glass-card:hover .service-line { width: 100%; }
+
+  .gradient-divider {
+    background: linear-gradient(to right, transparent, rgba(249,115,22,0.2), transparent);
+    height: 1px;
+  }
+
+  .social-icon { transition: all 0.3s ease; }
+  .social-icon:hover {
+    color: #f97316;
+    transform: translateY(-3px);
+    filter: drop-shadow(0 0 8px rgba(249,115,22,0.3));
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 30px -6px rgba(249,115,22,0.4);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px -6px rgba(249,115,22,0.5);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: #7c2d12;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    border: 1.5px solid rgba(249,115,22,0.2);
+    transition: all 0.3s ease;
+  }
+  .btn-secondary:hover {
+    border-color: #f97316;
+    color: #f97316;
+    transform: translateY(-2px);
+    background: rgba(249,115,22,0.03);
+  }
+
+  .reveal-section {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.16,1,0.3,1);
+  }
+  .reveal-section.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 700px; height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(249,115,22,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .grid-pattern {
+    background-image:
+      linear-gradient(rgba(249,115,22,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(249,115,22,0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .logo-img { filter: brightness(1.05); transition: filter 0.5s ease; }
+  .logo-img:hover { filter: brightness(1.15); }
+
+  .stat-number {
+    background: linear-gradient(135deg, #c2410c, #f97316);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .mobile-menu {
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .mobile-menu.open { transform: translateX(0); }
+
+  .toast {
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.16,1,0.3,1);
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+
+  /* Portfolio image overlay */
+  .portfolio-item::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(60,30,10,0.7) 0%, rgba(60,30,10,0.1) 40%, transparent 100%);
+    border-radius: inherit;
+    transition: opacity 0.5s ease;
+  }
+  .portfolio-item:hover::after { opacity: 0.85; }
+
+  /* Warm section backgrounds */
+  .section-warm { background: linear-gradient(180deg, #fff9f2 0%, #fff3e0 50%, #fff9f2 100%); }
+  .section-white { background: #fffdf9; }
+  .section-orange-light { background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 50%, #fff7ed 100%); }
+  .section-cream { background: #fffaf4; }
+</style>
+</head>
+
+<body class="grid-pattern">
+
+<div class="noise-overlay"></div>
+
+<!-- ==================== NAVIGATION ==================== -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-500">
+  <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+    <a href="#" class="flex items-center gap-3 group">
+      <img src="https://z-cdn-media.chatglm.cn/files/3878963d-145b-45a7-a794-149323bb276e.jpeg?auth_key=1876858307-840d6c5d6a2f4b22957797a90c16cabe-0-9f54eca44577abd288ce8ea187bd53c3" alt="Ceylon Advertising" class="logo-img h-10 md:h-12 w-auto rounded-sm">
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#home" class="text-sm text-stone-500 hover:text-brand-700 transition-colors duration-300 tracking-wide">Home</a>
+      <a href="#services" class="text-sm text-stone-500 hover:text-brand-700 transition-colors duration-300 tracking-wide">Services</a>
+      <a href="#about" class="text-sm text-stone-500 hover:text-brand-700 transition-colors duration-300 tracking-wide">About</a>
+      <a href="#portfolio" class="text-sm text-stone-500 hover:text-brand-700 transition-colors duration-300 tracking-wide">Portfolio</a>
+      <a href="#contact" class="text-sm text-stone-500 hover:text-brand-700 transition-colors duration-300 tracking-wide">Contact</a>
+      <a href="https://wa.me/94706273797" target="_blank" class="btn-primary px-5 py-2.5 rounded-lg text-xs uppercase">Get Quote</a>
+    </div>
+    <button id="menuToggle" class="md:hidden text-stone-700" onclick="toggleMenu()">
+      <iconify-icon icon="solar:hamburger-menu-linear" width="28"></iconify-icon>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="mobile-menu fixed inset-0 z-[60] bg-white/95 backdrop-blur-xl flex flex-col">
+  <div class="flex justify-between items-center px-6 py-5">
+    <img src="https://z-cdn-media.chatglm.cn/files/3878963d-145b-45a7-a794-149323bb276e.jpeg?auth_key=1876858307-840d6c5d6a2f4b22957797a90c16cabe-0-9f54eca44577abd288ce8ea187bd53c3" alt="Ceylon Advertising" class="h-8 w-auto">
+    <button onclick="toggleMenu()" class="text-stone-700">
+      <iconify-icon icon="solar:close-circle-linear" width="28"></iconify-icon>
+    </button>
+  </div>
+  <div class="flex-1 flex flex-col items-center justify-center gap-8">
+    <a href="#home" onclick="toggleMenu()" class="text-2xl font-light text-stone-500 hover:text-brand-600 transition-colors">Home</a>
+    <a href="#services" onclick="toggleMenu()" class="text-2xl font-light text-stone-500 hover:text-brand-600 transition-colors">Services</a>
+    <a href="#about" onclick="toggleMenu()" class="text-2xl font-light text-stone-500 hover:text-brand-600 transition-colors">About</a>
+    <a href="#portfolio" onclick="toggleMenu()" class="text-2xl font-light text-stone-500 hover:text-brand-600 transition-colors">Portfolio</a>
+    <a href="#contact" onclick="toggleMenu()" class="text-2xl font-light text-stone-500 hover:text-brand-600 transition-colors">Contact</a>
+    <a href="https://wa.me/94706273797" target="_blank" class="btn-primary px-8 py-3 rounded-lg text-sm uppercase mt-4">Get Quote</a>
+  </div>
+  <div class="flex justify-center gap-6 pb-8">
+    <a href="https://www.facebook.com/ceylonadvertising" target="_blank" class="social-icon text-stone-400 text-xl"><iconify-icon icon="ri:facebook-fill"></iconify-icon></a>
+    <a href="https://www.instagram.com/ceylonadvertising" target="_blank" class="social-icon text-stone-400 text-xl"><iconify-icon icon="ri:instagram-fill"></iconify-icon></a>
+    <a href="https://www.tiktok.com/@ceylonadvertising" target="_blank" class="social-icon text-stone-400 text-xl"><iconify-icon icon="ri:tiktok-fill"></iconify-icon></a>
+  </div>
+</div>
+
+<!-- ==================== HERO SECTION ==================== -->
+<section id="home" class="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden section-orange-light">
+  <div class="hero-glow"></div>
+  <div class="absolute top-1/4 left-1/4 w-2 h-2 bg-brand-400 rounded-full animate-breathe"></div>
+  <div class="absolute top-1/3 right-1/3 w-1.5 h-1.5 bg-brand-300 rounded-full animate-breathe delay-300"></div>
+  <div class="absolute bottom-1/3 left-1/3 w-1 h-1 bg-brand-500 rounded-full animate-breathe delay-600"></div>
+
+  <div class="relative z-10 text-center max-w-5xl mx-auto">
+    <div class="animate-slide-up mb-8">
+      <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-brand-400/20 bg-brand-100/60 text-brand-700 text-xs tracking-[0.2em] uppercase font-medium">
+        <span class="w-1.5 h-1.5 bg-brand-500 rounded-full animate-breathe"></span>
+        Premium Advertising Solutions
+      </span>
+    </div>
+
+    <div class="animate-scale-reveal delay-200 mb-8">
+      <img src="https://z-cdn-media.chatglm.cn/files/3878963d-145b-45a7-a794-149323bb276e.jpeg?auth_key=1876858307-840d6c5d6a2f4b22957797a90c16cabe-0-9f54eca44577abd288ce8ea187bd53c3" alt="Ceylon Advertising" class="logo-img h-20 md:h-28 w-auto mx-auto animate-float">
+    </div>
+
+    <h1 class="animate-slide-up delay-300 font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-400 leading-[1.05] tracking-tight mb-6">
+      <span class="text-stone-800">Elevate Your</span><br>
+      <span class="shine-text">Brand Presence</span>
+    </h1>
+
+    <p class="animate-slide-up delay-400 text-base md:text-lg text-stone-500 font-light leading-relaxed max-w-2xl mx-auto mb-4">
+      සියලුම මුද්‍රණ සහ ප්‍රචාරණ අවශ්‍යතා එකම තැනින්...
+    </p>
+    <p class="animate-slide-up delay-500 text-sm text-stone-400 font-light max-w-xl mx-auto mb-10">
+      From stunning name boards to cutting-edge digital printing — we transform your vision into powerful visual statements that captivate and convert.
+    </p>
+
+    <div class="animate-slide-up delay-600 flex flex-col sm:flex-row items-center justify-center gap-4">
+      <a href="https://wa.me/94706273797" target="_blank" class="btn-primary px-8 py-4 rounded-xl text-sm uppercase flex items-center gap-2">
+        <iconify-icon icon="ri:whatsapp-fill" width="18"></iconify-icon>
+        Chat on WhatsApp
+      </a>
+      <a href="#services" class="btn-secondary px-8 py-4 rounded-xl text-sm uppercase flex items-center gap-2">
+        Explore Services
+        <iconify-icon icon="solar:arrow-down-linear" width="16"></iconify-icon>
+      </a>
+    </div>
+  </div>
+
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 animate-slide-up delay-800">
+    <div class="flex flex-col items-center gap-2 text-stone-400">
+      <span class="text-[10px] tracking-[0.3em] uppercase">Scroll</span>
+      <div class="w-px h-8 bg-gradient-to-b from-stone-400 to-transparent"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== MARQUEE ==================== -->
+<div class="relative overflow-hidden py-6 border-y border-brand-200/30 bg-cream-50">
+  <div class="flex whitespace-nowrap marquee-track">
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">Digital Printing</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">Name Boards</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">Light Boards</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">Custom Designs</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">Vehicle Wraps</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">Banners & Signage</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">LED Displays</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">Digital Printing</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">Name Boards</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">Light Boards</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">Custom Designs</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">Vehicle Wraps</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">Banners & Signage</span>
+    <span class="text-brand-300">✦</span>
+    <span class="mx-8 text-sm text-stone-400 tracking-[0.2em] uppercase">LED Displays</span>
+    <span class="text-brand-300">✦</span>
+  </div>
+</div>
+
+<!-- ==================== STATS ==================== -->
+<section class="py-20 px-6 section-white reveal-section">
+  <div class="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    <div>
+      <div class="stat-number text-3xl md:text-4xl font-heading font-bold" data-count="500">0+</div>
+      <div class="text-xs text-stone-400 tracking-[0.15em] uppercase mt-2">Projects Done</div>
+    </div>
+    <div>
+      <div class="stat-number text-3xl md:text-4xl font-heading font-bold" data-count="350">0+</div>
+      <div class="text-xs text-stone-400 tracking-[0.15em] uppercase mt-2">Happy Clients</div>
+    </div>
+    <div>
+      <div class="stat-number text-3xl md:text-4xl font-heading font-bold" data-count="10">0+</div>
+      <div class="text-xs text-stone-400 tracking-[0.15em] uppercase mt-2">Years Experience</div>
+    </div>
+    <div>
+      <div class="stat-number text-3xl md:text-4xl font-heading font-bold" data-count="24">0</div>
+      <div class="text-xs text-stone-400 tracking-[0.15em] uppercase mt-2">Hour Service</div>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-divider max-w-4xl mx-auto"></div>
+
+<!-- ==================== SERVICES ==================== -->
+<section id="services" class="py-24 md:py-32 px-6 section-warm reveal-section">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16 md:mb-20">
+      <span class="text-xs tracking-[0.3em] uppercase text-brand-600 font-medium">What We Offer</span>
+      <h2 class="font-display text-3xl md:text-5xl lg:text-6xl mt-4 tracking-tight text-stone-800">
+        Our <span class="italic text-brand-600">Services</span>
+      </h2>
+      <p class="text-stone-400 font-light mt-4 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+        Comprehensive advertising solutions tailored to make your brand stand out in the Sri Lankan market.
+      </p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="glass-card rounded-2xl p-8 group">
+        <div class="w-12 h-12 rounded-xl bg-brand-100 flex items-center justify-center mb-6 group-hover:bg-brand-200 transition-colors duration-500">
+          <iconify-icon icon="solar:printer-linear" width="24" class="text-brand-600"></iconify-icon>
+        </div>
+        <h3 class="text-lg font-heading font-medium mb-3 text-stone-800">Digital Printing</h3>
+        <p class="text-sm text-stone-400 font-light leading-relaxed mb-6">High-resolution digital printing for banners, posters, stickers, and all your promotional materials with vibrant colors.</p>
+        <div class="service-line"></div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-8 group">
+        <div class="w-12 h-12 rounded-xl bg-brand-100 flex items-center justify-center mb-6 group-hover:bg-brand-200 transition-colors duration-500">
+          <iconify-icon icon="solar:signpost-linear" width="24" class="text-brand-600"></iconify-icon>
+        </div>
+        <h3 class="text-lg font-heading font-medium mb-3 text-stone-800">Name Boards</h3>
+        <p class="text-sm text-stone-400 font-light leading-relaxed mb-6">Professional name boards crafted with premium materials — acrylic, aluminium, stainless steel, and more.</p>
+        <div class="service-line"></div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-8 group">
+        <div class="w-12 h-12 rounded-xl bg-brand-100 flex items-center justify-center mb-6 group-hover:bg-brand-200 transition-colors duration-500">
+          <iconify-icon icon="solar:lightbulb-bolt-linear" width="24" class="text-brand-600"></iconify-icon>
+        </div>
+        <h3 class="text-lg font-heading font-medium mb-3 text-stone-800">Light Boards & LED</h3>
+        <p class="text-sm text-stone-400 font-light leading-relaxed mb-6">Eye-catching illuminated signs, LED displays, and backlit boards that shine bright day and night.</p>
+        <div class="service-line"></div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-8 group">
+        <div class="w-12 h-12 rounded-xl bg-brand-100 flex items-center justify-center mb-6 group-hover:bg-brand-200 transition-colors duration-500">
+          <iconify-icon icon="solar:pallete-2-linear" width="24" class="text-brand-600"></iconify-icon>
+        </div>
+        <h3 class="text-lg font-heading font-medium mb-3 text-stone-800">Custom Design</h3>
+        <p class="text-sm text-stone-400 font-light leading-relaxed mb-6">Unique advertising designs created by our creative team to perfectly represent your brand identity.</p>
+        <div class="service-line"></div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-8 group">
+        <div class="w-12 h-12 rounded-xl bg-brand-100 flex items-center justify-center mb-6 group-hover:bg-brand-200 transition-colors duration-500">
+          <iconify-icon icon="solar:bus-linear" width="24" class="text-brand-600"></iconify-icon>
+        </div>
+        <h3 class="text-lg font-heading font-medium mb-3 text-stone-800">Vehicle Wrapping</h3>
+        <p class="text-sm text-stone-400 font-light leading-relaxed mb-6">Turn your vehicles into moving billboards with professional vinyl wraps and fleet branding solutions.</p>
+        <div class="service-line"></div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-8 group">
+        <div class="w-12 h-12 rounded-xl bg-brand-100 flex items-center justify-center mb-6 group-hover:bg-brand-200 transition-colors duration-500">
+          <iconify-icon icon="solar:flag-linear" width="24" class="text-brand-600"></iconify-icon>
+        </div>
+        <h3 class="text-lg font-heading font-medium mb-3 text-stone-800">Banners & Signage</h3>
+        <p class="text-sm text-stone-400 font-light leading-relaxed mb-6">Indoor and outdoor banners, flex boards, cut-out letters, and complete signage solutions for any event.</p>
+        <div class="service-line"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-divider max-w-4xl mx-auto"></div>
+
+<!-- ==================== PORTFOLIO — REAL IMAGES ==================== -->
+<section id="portfolio" class="py-24 md:py-32 px-6 section-orange-light reveal-section">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <span class="text-xs tracking-[0.3em] uppercase text-brand-600 font-medium">Our Work</span>
+      <h2 class="font-display text-3xl md:text-5xl lg:text-6xl mt-4 tracking-tight text-stone-800">
+        Recent <span class="italic text-brand-600">Projects</span>
+      </h2>
+      <p class="text-stone-400 font-light mt-4 max-w-lg mx-auto text-sm md:text-base">Real work, real results. Here's a glimpse of what we've delivered for our clients.</p>
+    </div>
+
+    <!-- Portfolio Grid — All 6 real images -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <!-- 1: School + Auto parts sign -->
+      <div class="portfolio-item group relative aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer">
+        <img src="https://z-cdn-media.chatglm.cn/files/47cd3873-ae64-4cc3-bd45-821d564866d0.png?auth_key=1876860198-cc2bcd9d0e38402aa743a364dadd5ed9-0-f3b351c74136ecea04bb59d57c4dab3b" alt="School Fence Banner & Auto Parts Sign" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
+        <div class="absolute bottom-0 left-0 right-0 p-6 z-10 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+          <span class="text-xs tracking-[0.15em] uppercase text-brand-300 font-medium">Signage</span>
+          <h3 class="text-lg font-heading font-medium mt-1 text-white">School Banner & Shop Sign</h3>
+          <p class="text-xs text-white/60 mt-1 hidden group-hover:block transition-all">Sādhana International School & AUTOMOBEX</p>
+        </div>
+      </div>
+
+      <!-- 2: Large billboard AVL -->
+      <div class="portfolio-item group relative aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer">
+        <img src="https://z-cdn-media.chatglm.cn/files/8cf01e9b-ffd0-47a0-af09-4f469e48e0f4.png?auth_key=1876860198-dbf5e501cd284cc1a66d697dc6666ddc-0-b9a69beed69cd3c6dd8b1f242aa0b421" alt="AVL Siddhartha Gauthama Billboard" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
+        <div class="absolute bottom-0 left-0 right-0 p-6 z-10 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+          <span class="text-xs tracking-[0.15em] uppercase text-brand-300 font-medium">Billboard</span>
+          <h3 class="text-lg font-heading font-medium mt-1 text-white">AVL Siddhartha Billboard</h3>
+          <p class="text-xs text-white/60 mt-1 hidden group-hover:block transition-all">Large format outdoor billboard installation</p>
+        </div>
+      </div>
+
+      <!-- 3: Vehicle branding -->
+      <div class="portfolio-item group relative aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer">
+        <img src="https://z-cdn-media.chatglm.cn/files/e9691a74-ad88-4ffc-bbcd-1bb3a8c2740a.png?auth_key=1876860198-5fa2c50102ec40728570ce62d5ccdebc-0-76694506883b80c003709cf7b694d5c8" alt="Vehicle Branding Van Wrap" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
+        <div class="absolute bottom-0 left-0 right-0 p-6 z-10 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+          <span class="text-xs tracking-[0.15em] uppercase text-brand-300 font-medium">Vehicle Wrap</span>
+          <h3 class="text-lg font-heading font-medium mt-1 text-white">Juice Brand Van Wrap</h3>
+          <p class="text-xs text-white/60 mt-1 hidden group-hover:block transition-all">Bold & bright vehicle branding</p>
+        </div>
+      </div>
+
+      <!-- 4: Billboard with person -->
+      <div class="portfolio-item group relative aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer lg:col-span-2">
+        <img src="https://z-cdn-media.chatglm.cn/files/a6366d69-171d-4de2-918a-83a0cd6822db.png?auth_key=1876860198-2d962560befb4831ab2431ea6110098f-0-f7aa5c3519a4759f84f8b3edbf653deb" alt="Outdoor Billboard Display" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700">
+        <div class="absolute bottom-0 left-0 right-0 p-6 z-10 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+          <span class="text-xs tracking-[0.15em] uppercase text-brand-300 font-medium">Billboard</span>
+          <h3 class="text-lg font-heading font-medium mt-1 text-white">Outdoor Billboard with Lighting</h3>
+          <p class="text-xs text-white/60 mt-1 hidden group-hover:block transition-all">Professional billboard installation with illumination</p>
+        </div>
+      </div>
+
+      <!-- 5: Night billboard Gangar Motors -->
+      <div class="portfolio-item group relative aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer">
+        <img src="https://z-cdn-media.chatglm.cn/files/fe094a08-13a6-4486-8ac2-e5f5d137df02.png?auth_key=1876860198-bb3f58908a3940bf8530917712d57564-0-e311def93fd51a4de2ad794c5c57982a" alt="Gangar Motors Night Billboard" class="w-full h-full object-cover group-hover:scale-110 transition-all duration-700">
+        <div class="absolute bottom-0 left-0 right-0 p-6 z-10 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+          <span class="text-xs tracking-[0.15em] uppercase text-brand-300 font-medium">Night Display</span>
+          <h3 class="text-lg font-heading font-medium mt-1 text-white">Gangar Motors Billboard</h3>
+          <p class="text-xs text-white/60 mt-1 hidden group-hover:block transition-all">Illuminated night advertising display</p>
+        </div>
+      </div>
+
+      <!-- 6: City intersection PE+ water tanks -->
+      <div class="portfolio-item group relative aspect-[4/3] rounded-2xl overflow-hidden cursor-pointer lg:col-span-3">
+        <img src="https://z-cdn-media.chatglm.cn/files/2d82fdd2-bb56-4b31-aa9e-c7f824082cf4.png?auth_key=1876860198-95efb5f860e147f6b6826fa513b35fb9-0-d6e166bf323d47a45c5911c7513d4612" alt="PE+ Water Tanks City Billboard" class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700">
+        <div class="absolute bottom-0 left-0 right-0 p-6 z-10 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+          <span class="text-xs tracking-[0.15em] uppercase text-brand-300 font-medium">City Signage</span>
+          <h3 class="text-lg font-heading font-medium mt-1 text-white">PE+ Water Tanks — City Billboard</h3>
+          <p class="text-xs text-white/60 mt-1 hidden group-hover:block transition-all">High-visibility roadside advertising at busy intersection</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<div class="gradient-divider max-w-4xl mx-auto"></div>
+
+<!-- ==================== ABOUT ==================== -->
+<section id="about" class="py-24 md:py-32 px-6 section-white reveal-section">
+  <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 md:gap-16 items-center">
+    <div class="relative">
+      <div class="aspect-[4/5] rounded-2xl overflow-hidden shadow-2xl shadow-brand-200/30">
+        <img src="https://z-cdn-media.chatglm.cn/files/8cf01e9b-ffd0-47a0-af09-4f469e48e0f4.png?auth_key=1876860198-dbf5e501cd284cc1a66d697dc6666ddc-0-b9a69beed69cd3c6dd8b1f242aa0b421" alt="Ceylon Advertising Team at Work" class="w-full h-full object-cover hover:scale-105 transition-all duration-700">
+      </div>
+      <div class="absolute -bottom-6 -right-4 md:-right-8 glass-card rounded-xl p-5 animate-float shadow-xl shadow-brand-100/30">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-brand-100 flex items-center justify-center">
+            <iconify-icon icon="solar:verified-check-bold" width="20" class="text-brand-600"></iconify-icon>
+          </div>
+          <div>
+            <div class="text-sm font-medium text-stone-700">Trusted Since</div>
+            <div class="text-brand-600 font-heading font-bold">10+ Years</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <span class="text-xs tracking-[0.3em] uppercase text-brand-600 font-medium">About Us</span>
+      <h2 class="font-display text-3xl md:text-5xl mt-4 tracking-tight leading-tight text-stone-800">
+        Crafting <span class="italic text-brand-600">Visual</span> Excellence
+      </h2>
+      <div class="space-y-4 mt-6 text-sm text-stone-400 font-light leading-relaxed">
+        <p>Ceylon Advertising has been at the forefront of Sri Lanka's advertising industry, delivering premium printing and signage solutions that help businesses shine.</p>
+        <p>Based in Hokandara, our state-of-the-art facility combines cutting-edge technology with skilled craftsmanship to produce results that exceed expectations — every single time.</p>
+        <p>Whether you need a simple name board or a complete brand identity rollout, we bring the same level of dedication and attention to detail to every project.</p>
+      </div>
+      <div class="grid grid-cols-2 gap-4 mt-8">
+        <div class="flex items-center gap-3">
+          <iconify-icon icon="solar:check-circle-linear" width="18" class="text-brand-500"></iconify-icon>
+          <span class="text-sm text-stone-600">24/7 Service</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <iconify-icon icon="solar:check-circle-linear" width="18" class="text-brand-500"></iconify-icon>
+          <span class="text-sm text-stone-600">Fast Delivery</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <iconify-icon icon="solar:check-circle-linear" width="18" class="text-brand-500"></iconify-icon>
+          <span class="text-sm text-stone-600">Premium Quality</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <iconify-icon icon="solar:check-circle-linear" width="18" class="text-brand-500"></iconify-icon>
+          <span class="text-sm text-stone-600">Best Prices</span>
+        </div>
+      </div>
+      <a href="https://wa.me/94706273797" target="_blank" class="btn-primary inline-flex items-center gap-2 px-6 py-3 rounded-xl text-xs uppercase mt-8">
+        <iconify-icon icon="ri:whatsapp-fill" width="16"></iconify-icon>
+        Let's Talk
+      </a>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-divider max-w-4xl mx-auto"></div>
+
+<!-- ==================== WHY CHOOSE US ==================== -->
+<section class="py-24 md:py-32 px-6 section-warm reveal-section">
+  <div class="max-w-6xl mx-auto text-center">
+    <span class="text-xs tracking-[0.3em] uppercase text-brand-600 font-medium">Why Ceylon</span>
+    <h2 class="font-display text-3xl md:text-5xl mt-4 tracking-tight text-stone-800">
+      Why Choose <span class="italic text-brand-600">Us</span>
+    </h2>
+    <div class="grid md:grid-cols-3 gap-8 mt-16">
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-2xl bg-brand-100 flex items-center justify-center mx-auto mb-5">
+          <iconify-icon icon="solar:clock-circle-linear" width="28" class="text-brand-600"></iconify-icon>
+        </div>
+        <h3 class="font-heading font-medium text-lg mb-2 text-stone-800">24/7 Availability</h3>
+        <p class="text-sm text-stone-400 font-light leading-relaxed">We never sleep. Reach us anytime for urgent orders or consultations — day or night.</p>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-2xl bg-brand-100 flex items-center justify-center mx-auto mb-5">
+          <iconify-icon icon="solar:medal-ribbons-star-linear" width="28" class="text-brand-600"></iconify-icon>
+        </div>
+        <h3 class="font-heading font-medium text-lg mb-2 text-stone-800">Premium Quality</h3>
+        <p class="text-sm text-stone-400 font-light leading-relaxed">Only the finest materials and latest technology — because your brand deserves nothing less.</p>
+      </div>
+      <div class="text-center">
+        <div class="w-16 h-16 rounded-2xl bg-brand-100 flex items-center justify-center mx-auto mb-5">
+          <iconify-icon icon="solar:wallet-money-linear" width="28" class="text-brand-600"></iconify-icon>
+        </div>
+        <h3 class="font-heading font-medium text-lg mb-2 text-stone-800">Best Value</h3>
+        <p class="text-sm text-stone-400 font-light leading-relaxed">Competitive pricing without compromising quality. Get the best ROI for your advertising budget.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="gradient-divider max-w-4xl mx-auto"></div>
+
+<!-- ==================== CONTACT ==================== -->
+<section id="contact" class="py-24 md:py-32 px-6 section-white reveal-section">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid md:grid-cols-2 gap-12 md:gap-16">
+      <div>
+        <span class="text-xs tracking-[0.3em] uppercase text-brand-600 font-medium">Get In Touch</span>
+        <h2 class="font-display text-3xl md:text-5xl mt-4 tracking-tight leading-tight text-stone-800">
+          Let's Build <span class="italic text-brand-600">Something</span> Great
+        </h2>
+        <p class="text-sm text-stone-400 font-light leading-relaxed mt-4 max-w-md">
+          Ready to elevate your brand? Drop us a message on WhatsApp or visit our workshop in Hokandara.
+        </p>
+
+        <div class="space-y-6 mt-10">
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <iconify-icon icon="solar:map-point-linear" width="18" class="text-brand-600"></iconify-icon>
+            </div>
+            <div>
+              <div class="text-xs text-stone-400 tracking-[0.1em] uppercase mb-1">Address</div>
+              <div class="text-sm text-stone-600 font-light">No.239, Thalawathugoda Road, Hokandara</div>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <iconify-icon icon="solar:phone-linear" width="18" class="text-brand-600"></iconify-icon>
+            </div>
+            <div>
+              <div class="text-xs text-stone-400 tracking-[0.1em] uppercase mb-1">Phone</div>
+              <a href="tel:0706273797" class="text-sm text-stone-600 font-light hover:text-brand-600 transition-colors">070 627 3797</a>
+              <span class="text-stone-300 mx-2">|</span>
+              <a href="tel:0707273797" class="text-sm text-stone-600 font-light hover:text-brand-600 transition-colors">070 727 3797</a>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <iconify-icon icon="solar:letter-linear" width="18" class="text-brand-600"></iconify-icon>
+            </div>
+            <div>
+              <div class="text-xs text-stone-400 tracking-[0.1em] uppercase mb-1">Email</div>
+              <a href="mailto:ceylonadsservices@gmail.com" class="text-sm text-stone-600 font-light hover:text-brand-600 transition-colors">ceylonadsservices@gmail.com</a>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-10 h-10 rounded-lg bg-brand-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+              <iconify-icon icon="solar:clock-circle-linear" width="18" class="text-brand-600"></iconify-icon>
+            </div>
+            <div>
+              <div class="text-xs text-stone-400 tracking-[0.1em] uppercase mb-1">Hours</div>
+              <div class="text-sm text-stone-600 font-light">24 Hours Service — Always Open</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-10">
+          <div class="text-xs text-stone-400 tracking-[0.15em] uppercase mb-4">Follow Us</div>
+          <div class="flex items-center gap-4">
+            <a href="https://www.facebook.com/ceylonadvertising" target="_blank" class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center social-icon text-stone-400 hover:bg-brand-100 hover:border-brand-200">
+              <iconify-icon icon="ri:facebook-fill" width="20"></iconify-icon>
+            </a>
+            <a href="https://www.instagram.com/ceylonadvertising" target="_blank" class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center social-icon text-stone-400 hover:bg-brand-100 hover:border-brand-200">
+              <iconify-icon icon="ri:instagram-fill" width="20"></iconify-icon>
+            </a>
+            <a href="https://www.tiktok.com/@ceylonadvertising" target="_blank" class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center social-icon text-stone-400 hover:bg-brand-100 hover:border-brand-200">
+              <iconify-icon icon="ri:tiktok-fill" width="20"></iconify-icon>
+            </a>
+            <a href="https://www.ceylonadvertising.lk" target="_blank" class="w-11 h-11 rounded-xl bg-brand-50 border border-brand-100 flex items-center justify-center social-icon text-stone-400 hover:bg-brand-100 hover:border-brand-200">
+              <iconify-icon icon="solar:global-linear" width="20"></iconify-icon>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-card rounded-2xl p-8 md:p-10 shadow-xl shadow-brand-100/20">
+        <h3 class="font-heading font-medium text-xl mb-6 text-stone-800">Send a Message</h3>
+        <form id="contactForm" class="space-y-5" onsubmit="handleSubmit(event)">
+          <div>
+            <label class="text-xs text-stone-400 tracking-[0.1em] uppercase mb-2 block">Your Name</label>
+            <input type="text" required placeholder="John Perera" class="w-full bg-white/80 border border-brand-100 rounded-xl px-4 py-3 text-sm text-stone-700 placeholder-stone-300 focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all">
+          </div>
+          <div>
+            <label class="text-xs text-stone-400 tracking-[0.1em] uppercase mb-2 block">Phone Number</label>
+            <input type="tel" required placeholder="07X XXX XXXX" class="w-full bg-white/80 border border-brand-100 rounded-xl px-4 py-3 text-sm text-stone-700 placeholder-stone-300 focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all">
+          </div>
+          <div>
+            <label class="text-xs text-stone-400 tracking-[0.1em] uppercase mb-2 block">Service Needed</label>
+            <select required class="w-full bg-white/80 border border-brand-100 rounded-xl px-4 py-3 text-sm text-stone-500 focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all appearance-none cursor-pointer" style="background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%23a8a29e%22%20d%3D%22M6%208L1%203h10z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right 16px center;">
+              <option value="" disabled selected>Select a service</option>
+              <option value="printing">Digital Printing</option>
+              <option value="nameboard">Name Board</option>
+              <option value="lightbox">Light Board / LED</option>
+              <option value="design">Custom Design</option>
+              <option value="vehicle">Vehicle Wrapping</option>
+              <option value="banner">Banner & Signage</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs text-stone-400 tracking-[0.1em] uppercase mb-2 block">Message</label>
+            <textarea rows="4" required placeholder="Tell us about your project..." class="w-full bg-white/80 border border-brand-100 rounded-xl px-4 py-3 text-sm text-stone-700 placeholder-stone-300 focus:outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-100 transition-all resize-none"></textarea>
+          </div>
+          <button type="submit" class="btn-primary w-full py-4 rounded-xl text-sm uppercase flex items-center justify-center gap-2">
+            <iconify-icon icon="ri:whatsapp-fill" width="18"></iconify-icon>
+            Send via WhatsApp
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== CTA BANNER ==================== -->
+<section class="py-20 px-6 section-cream reveal-section">
+  <div class="max-w-5xl mx-auto relative rounded-3xl overflow-hidden shadow-2xl shadow-brand-200/40">
+    <div class="absolute inset-0 bg-gradient-to-br from-brand-600 via-brand-500 to-brand-700 animate-slow-zoom"></div>
+    <div class="absolute inset-0" style="background: url('https://z-cdn-media.chatglm.cn/files/fe094a08-13a6-4486-8ac2-e5f5d137df02.png?auth_key=1876860198-bb3f58908a3940bf8530917712d57564-0-e311def93fd51a4de2ad794c5c57982a') center/cover; opacity:0.15;"></div>
+    <div class="absolute inset-0 bg-black/30"></div>
+    <div class="relative z-10 text-center py-16 px-8">
+      <h2 class="font-display text-3xl md:text-5xl tracking-tight text-white">Ready to Stand Out?</h2>
+      <p class="text-white/80 font-light mt-4 max-w-lg mx-auto text-sm md:text-base">Let's create something extraordinary together. Your brand deserves the best — and we deliver nothing less.</p>
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8">
+        <a href="https://wa.me/94706273797" target="_blank" class="bg-white text-brand-700 px-8 py-4 rounded-xl text-sm uppercase font-semibold flex items-center gap-2 hover:bg-cream-50 transition-colors shadow-lg">
+          <iconify-icon icon="ri:whatsapp-fill" width="18"></iconify-icon>
+          Start Now
+        </a>
+        <a href="tel:0706273797" class="bg-white/10 backdrop-blur-sm text-white border border-white/20 px-8 py-4 rounded-xl text-sm uppercase font-medium flex items-center gap-2 hover:bg-white/20 transition-colors">
+          <iconify-icon icon="solar:phone-linear" width="18"></iconify-icon>
+          Call Us
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== FOOTER ==================== -->
+<footer class="border-t border-brand-100 pt-16 pb-8 px-6 bg-white">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid md:grid-cols-4 gap-10 mb-12">
+      <div class="md:col-span-2">
+        <img src="https://z-cdn-media.chatglm.cn/files/3878963d-145b-45a7-a794-149323bb276e.jpeg?auth_key=1876858307-840d6c5d6a2f4b22957797a90c16cabe-0-9f54eca44577abd288ce8ea187bd53c3" alt="Ceylon Advertising" class="logo-img h-12 w-auto mb-4">
+        <p class="text-sm text-stone-400 font-light leading-relaxed max-w-sm">
+          Your trusted advertising partner in Sri Lanka. Premium printing, signage, and design solutions — all under one roof.
+        </p>
+        <div class="flex items-center gap-3 mt-6">
+          <a href="https://www.facebook.com/ceylonadvertising" target="_blank" class="social-icon text-stone-300 text-lg"><iconify-icon icon="ri:facebook-fill"></iconify-icon></a>
+          <a href="https://www.instagram.com/ceylonadvertising" target="_blank" class="social-icon text-stone-300 text-lg"><iconify-icon icon="ri:instagram-fill"></iconify-icon></a>
+          <a href="https://www.tiktok.com/@ceylonadvertising" target="_blank" class="social-icon text-stone-300 text-lg"><iconify-icon icon="ri:tiktok-fill"></iconify-icon></a>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-xs tracking-[0.2em] uppercase text-stone-500 font-medium mb-4">Quick Links</h4>
+        <div class="space-y-3">
+          <a href="#home" class="block text-sm text-stone-400 hover:text-brand-600 transition-colors font-light">Home</a>
+          <a href="#services" class="block text-sm text-stone-400 hover:text-brand-600 transition-colors font-light">Services</a>
+          <a href="#about" class="block text-sm text-stone-400 hover:text-brand-600 transition-colors font-light">About Us</a>
+          <a href="#portfolio" class="block text-sm text-stone-400 hover:text-brand-600 transition-colors font-light">Portfolio</a>
+          <a href="#contact" class="block text-sm text-stone-400 hover:text-brand-600 transition-colors font-light">Contact</a>
+        </div>
+      </div>
+      <div>
+        <h4 class="text-xs tracking-[0.2em] uppercase text-stone-500 font-medium mb-4">Services</h4>
+        <div class="space-y-3">
+          <span class="block text-sm text-stone-400 font-light">Digital Printing</span>
+          <span class="block text-sm text-stone-400 font-light">Name Boards</span>
+          <span class="block text-sm text-stone-400 font-light">Light Boards & LED</span>
+          <span class="block text-sm text-stone-400 font-light">Custom Design</span>
+          <span class="block text-sm text-stone-400 font-light">Vehicle Wrapping</span>
+        </div>
+      </div>
+    </div>
+    <div class="gradient-divider mb-6"></div>
+    <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+      <p class="text-xs text-stone-300 font-light">© 2025 Ceylon Advertising. All rights reserved.</p>
+      <p class="text-xs text-stone-300 font-light">Designed with <span class="text-brand-500">♥</span> in Sri Lanka</p>
+    </div>
+  </div>
+</footer>
+
+<!-- ==================== FLOATING WHATSAPP ==================== -->
+<a href="https://wa.me/94706273797" target="_blank" class="fixed bottom-6 right-6 z-50 group">
+  <div class="absolute inset-0 rounded-full bg-green-500 animate-ping opacity-20"></div>
+  <div class="relative w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg shadow-green-500/30 group-hover:scale-110 transition-transform duration-300">
+    <iconify-icon icon="ri:whatsapp-fill" width="28" class="text-white"></iconify-icon>
+  </div>
+</a>
+
+<!-- ==================== TOAST ==================== -->
+<div id="toast" class="toast fixed bottom-24 right-6 z-50 glass-card rounded-xl px-5 py-3 flex items-center gap-3 max-w-xs shadow-xl">
+  <iconify-icon icon="solar:check-circle-bold" width="20" class="text-green-500"></iconify-icon>
+  <span class="text-sm text-stone-600">Message prepared! Opening WhatsApp...</span>
+</div>
+
+<!-- ==================== JAVASCRIPT ==================== -->
+<script>
+  function toggleMenu() {
+    document.getElementById('mobileMenu').classList.toggle('open');
+    document.body.style.overflow = document.getElementById('mobileMenu').classList.contains('open') ? 'hidden' : '';
+  }
+
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset > 80) {
+      navbar.style.background = 'rgba(255,249,242,0.9)';
+      navbar.style.backdropFilter = 'blur(16px)';
+      navbar.style.borderBottom = '1px solid rgba(249,115,22,0.08)';
+    } else {
+      navbar.style.background = 'transparent';
+      navbar.style.backdropFilter = 'none';
+      navbar.style.borderBottom = 'none';
+    }
+  });
+
+  const revealSections = document.querySelectorAll('.reveal-section');
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  revealSections.forEach(s => revealObserver.observe(s));
+
+  const statNumbers = document.querySelectorAll('.stat-number');
+  const statObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const el = entry.target;
+        const target = parseInt(el.dataset.count);
+        const suffix = el.textContent.includes('+') ? '+' : '';
+        let current = 0;
+        const increment = target / 60;
+        const timer = setInterval(() => {
+          current += increment;
+          if (current >= target) { current = target; clearInterval(timer); }
+          el.textContent = Math.floor(current) + suffix;
+        }, 25);
+        statObserver.unobserve(el);
+      }
+    });
+  }, { threshold: 0.5 });
+  statNumbers.forEach(s => statObserver.observe(s));
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.querySelector('input[type="text"]').value;
+    const phone = form.querySelector('input[type="tel"]').value;
+    const service = form.querySelector('select').value;
+    const message = form.querySelector('textarea').value;
+    const waMessage = `Hi Ceylon Advertising! 👋\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Service:* ${service}\n*Message:* ${message}`;
+    const waURL = `https://wa.me/94706273797?text=${encodeURIComponent(waMessage)}`;
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+    setTimeout(() => { window.open(waURL, '_blank'); form.reset(); }, 800);
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+    });
+  });
+</script>
+
+</body>
+</html>
