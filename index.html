@@ -4,21 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ceylon Advertising — Premium Advertising Solutions</title>
-<!DOCTYPE html>
-<html lang="si">
-<head>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI-Powered Partner Showcase</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(calc(-250px * 10)); }
-        }
+
+    
+        
+        
 
         .slider {
             background: white;
@@ -94,11 +83,7 @@
 </head>
 <body class="bg-gray-50 min-h-screen font-sans">
 
-    <!-- Header Section -->
-    <header class="py-12 px-6 text-center">
-        <h1 class="text-4xl font-extrabold text-gray-900 mb-4">Our Trusted Partners</h1>
-        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Click on any logo to learn more about the brand using our ✨ AI Brand Assistant.</p>
-    </header>
+ 
 
     <!-- Logo Carousel -->
     <div class="slider shadow-sm border-y border-gray-100 mb-16">
@@ -106,34 +91,33 @@
             <!-- Logos will be injected here -->
         </div>
     </div>
-
-    <!-- AI Info Section -->
+ 
     <section id="aiSection" class="max-w-4xl mx-auto px-6 mb-20 hidden">
         <div class="bg-white rounded-2xl shadow-xl p-8 border border-blue-100">
             <div class="flex items-center justify-between mb-6">
                 <h3 id="selectedBrandName" class="text-2xl font-bold text-gray-800">Brand Name</h3>
-                <span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-sm font-medium">✨ AI Generated Insights</span>
+                <span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-sm font-medium"> </span>
             </div>
             
             <div id="aiLoading" class="hidden flex flex-col items-center py-10">
                 <div class="loader mb-4"></div>
-                <p class="text-gray-500 italic">Gemini is thinking about this brand...</p>
+                <p class="text-gray-500 italic">...</p>
             </div>
 
             <div id="aiContent" class="prose prose-blue text-gray-700 leading-relaxed">
-                <!-- AI Response will appear here -->
+               
             </div>
             
             <div class="mt-8 pt-6 border-t border-gray-100 flex gap-4">
-                <button onclick="generateStrategy()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg transition font-medium flex items-center gap-2">
-                    ✨ Generate Collab Idea
+                <button onclick="()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg transition font-medium flex items-center gap-2">
+                   
                 </button>
             </div>
         </div>
     </section>
 
     <footer class="text-center py-10 text-gray-400 text-sm">
-        <p>&copy; 2024 Partner Showcase. Powered by Gemini API.</p>
+        <p>&copy; .</p>
     </footer>
 
     <script>
@@ -161,10 +145,9 @@
             logoTrack.appendChild(slide);
         });
 
-        async function callGemini(prompt) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+    
             
-            const payload = {
+         const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
                 systemInstruction: { parts: [{ text: "You are a professional business analyst. Provide concise, accurate information about Sri Lankan brands. Use bullet points where appropriate." }] }
             };
