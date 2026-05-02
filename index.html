@@ -7,7 +7,223 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered Partner Showcase</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(calc(-250px * 10)); }
+        }
+
+        .slider {
+            background: white;
+            height: 120px;
+            margin: auto;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+        }
+
+        .slider::before,
+        .slider::after {
+            background: linear-gradient(to right, rgba(255,255,255,1) 0%, rgba(255,255,255,0) 100%);
+            content: "";
+            height: 120px;
+            position: absolute;
+            width: 150px;
+            z-index: 2;
+        }
+
+        .slider::after { right: 0; top: 0; transform: rotateZ(180deg); }
+        .slider::before { left: 0; top: 0; }
+
+        .slide-track {
+            animation: scroll 40s linear infinite;
+            display: flex;
+            width: calc(250px * 20);
+        }
+
+        .slide {
+            height: 120px;
+            width: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            cursor: pointer;
+        }
+
+        .slide-content {
+            filter: grayscale(100%);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .slide:hover .slide-content {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .slider:hover .slide-track {
+            animation-play-state: paused;
+        }
+
+        /* Glassmorphism Loader */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #3498db;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen font-sans">
+
+    <!-- Header Section -->
+    <header class="py-12 px-6 text-center">
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-4">Our Trusted Partners</h1>
+        <p class="text-lg text-gray-600 max-w-2xl mx-auto">Click on any logo to learn more about the brand using our ✨ AI Brand Assistant.</p>
+    </header>
+
+    <!-- Logo Carousel -->
+    <div class="slider shadow-sm border-y border-gray-100 mb-16">
+        <div class="slide-track" id="logoTrack">
+            <!-- Logos will be injected here -->
+        </div>
+    </div>
+
+    <!-- AI Info Section -->
+    <section id="aiSection" class="max-w-4xl mx-auto px-6 mb-20 hidden">
+        <div class="bg-white rounded-2xl shadow-xl p-8 border border-blue-100">
+            <div class="flex items-center justify-between mb-6">
+                <h3 id="selectedBrandName" class="text-2xl font-bold text-gray-800">Brand Name</h3>
+                <span class="bg-blue-100 text-blue-700 px-4 py-1 rounded-full text-sm font-medium">✨ AI Generated Insights</span>
+            </div>
+            
+            <div id="aiLoading" class="hidden flex flex-col items-center py-10">
+                <div class="loader mb-4"></div>
+                <p class="text-gray-500 italic">Gemini is thinking about this brand...</p>
+            </div>
+
+            <div id="aiContent" class="prose prose-blue text-gray-700 leading-relaxed">
+                <!-- AI Response will appear here -->
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-100 flex gap-4">
+                <button onclick="generateStrategy()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg transition font-medium flex items-center gap-2">
+                    ✨ Generate Collab Idea
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center py-10 text-gray-400 text-sm">
+        <p>&copy; 2024 Partner Showcase. Powered by Gemini API.</p>
+    </footer>
+
+    <script>
+        const apiKey = ""; // Environment handles this
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'logo-showcase-ai';
+        
+        const logos = [
+            'CBL Group', 'Ritzbury Roccoa', 'Sanpac', 'CBL Sera', 'PE+ Pura Tech', 
+            'NCUK', 'Yuasa', 'AAT Sri Lanka', 'Swisstek', 'Emerald'
+        ];
+
+        const logoTrack = document.getElementById('logoTrack');
+        const displayLogos = [...logos, ...logos];
+
+        displayLogos.forEach(logo => {
+            const slide = document.createElement('div');
+            slide.className = 'slide';
+            slide.onclick = () => fetchBrandInfo(logo);
+            
+            slide.innerHTML = `
+                <div class="slide-content bg-gray-50 rounded-xl p-6 w-full h-24 flex items-center justify-center font-bold text-gray-500 border border-gray-200 shadow-sm">
+                    ${logo}
+                </div>
+            `;
+            logoTrack.appendChild(slide);
+        });
+
+        async function callGemini(prompt) {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+                systemInstruction: { parts: [{ text: "You are a professional business analyst. Provide concise, accurate information about Sri Lankan brands. Use bullet points where appropriate." }] }
+            };
+
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error('API Error');
+                    const data = await response.json();
+                    return data.candidates?.[0]?.content?.parts?.[0]?.text;
+                } catch (e) {
+                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, i) * 1000));
+                }
+            }
+            return "Sorry, I couldn't fetch information at this moment.";
+        }
+
+        let currentBrand = "";
+
+        async function fetchBrandInfo(brandName) {
+            currentBrand = brandName;
+            const section = document.getElementById('aiSection');
+            const loading = document.getElementById('aiLoading');
+            const content = document.getElementById('aiContent');
+            const title = document.getElementById('selectedBrandName');
+
+            section.classList.remove('hidden');
+            section.scrollIntoView({ behavior: 'smooth' });
+            
+            title.innerText = brandName;
+            loading.classList.remove('hidden');
+            content.innerText = "";
+
+            const prompt = `Tell me about the Sri Lankan brand "${brandName}". What do they do, what are they famous for, and what is their market position?`;
+            const result = await callGemini(prompt);
+            
+            loading.classList.add('hidden');
+            content.innerHTML = result.replace(/\n/g, '<br>');
+        }
+
+        async function generateStrategy() {
+            if (!currentBrand) return;
+            const content = document.getElementById('aiContent');
+            const loading = document.getElementById('aiLoading');
+            
+            loading.classList.remove('hidden');
+            const prompt = `Suggest a creative marketing collaboration idea between a tech startup and the brand "${currentBrand}". How can they work together to increase brand awareness?`;
+            const result = await callGemini(prompt);
+            
+            loading.classList.add('hidden');
+            content.innerHTML += `<hr class="my-6 border-blue-100"><div class="bg-blue-50 p-4 rounded-lg"><strong>🚀 Collaboration Strategy:</strong><br>${result.replace(/\n/g, '<br>')}</div>`;
+        }
+    </script>
+</body>
+</html>    
  
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
