@@ -4,7 +4,80 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ceylon Advertising — Premium Advertising Solutions</title>
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>වෙබ් අඩවිය සඳහා ලාංඡන ස්ලයිඩරය</title>
+    
+    <!-- CSS කොටස පහතින් -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4; /* පසුබිම් වර්ණය (විකල්ප) */
+        }
 
+        /* 1. ප්‍රධාන කන්ටේනරය (Container) - මෙය පිටත රාමුවයි */
+        .logo-slider {
+            width: 100%;            /* වෙබ් පිටුවේ සම්පූර්ණ පළල */
+            overflow: hidden;       /* පිටතට යන ලාංඡන නොපෙනී යයි */
+            background: #fff;       /* ලාංඡන පසුබිම සුදු වර්ණය */
+            padding: 20px 0;        /* උඩින් සහ යටින් ඉඩ තැබීම */
+            position: relative;
+        }
+
+        /* 2. ඇතුළත ඇති ලාංඡන පේළිය (Track) - මෙය චලනය වේ */
+        .logo-track {
+            display: flex;          /* ලාංඡන පේළියක් ලෙස තබයි */
+            width: 200%;            /* ලාංඡන පේළි දෙකක් තැබීමට තරම් ඉඩ (infinite loop සඳහා) */
+            animation: scroll 30s linear infinite; /* ඇනිමේෂන් එක */
+        }
+
+        /* 3. එක් රූපයක් සඳහා සැකසුම් */
+        .logo-track img {
+            height: 100px;           /* ලාංඡන වල උස (ඔබට අවශ්‍ය පරිදි වෙනස් කරන්න) */
+            margin: 0 40px;          /* ලාංඡන අතර පරතරය */
+            flex-shrink: 0;         /* රූප හැකිලීම වළක්වයි */
+        }
+
+        /* 4. ඇනිමේෂන් එක ක්‍රියාත්මක වන ආකාරය (Keyframes) */
+        @keyframes scroll {
+            0% {
+                transform: translateX(0); /* ආරම්භය */
+            }
+            100% {
+                transform: translateX(-50%); /* අඩක් ගිය පසු නැවත මුලට යයි (infinite loop) */
+            }
+        }
+        
+        /* 5. පරිගණක තිරයේදී (Desktop) - විකල්ප සැකසුමක් */
+        @media (min-width: 768px) {
+            .logo-track img {
+                height: 120px;       /* පරිගණක තිරවල ලාංඡන තරමක් විශාලව පෙන්වයි */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ලාංඡන ස්ලයිඩරයේ ප්‍රධාන ව්‍යුහය -->
+    <div class="logo-slider">
+        <div class="logo-track">
+            
+            <!-- 1 වන ලාංඡන පේළිය -->
+            <img src="image_12.png" alt="පාරිභෝගික ලාංඡන 1">
+            
+            <!-- infinite scroll එකක් සඳහා එම රූපයම නැවත එක් කළ යුතුය -->
+            <img src="image_12.png" alt="පාරිභෝගික ලාංඡන 2">
+            
+        </div>
+    </div>
+
+</body>
+</html>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
