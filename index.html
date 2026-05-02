@@ -185,8 +185,7 @@
             loading.classList.remove('hidden');
             content.innerText = "";
 
-            const prompt = `Tell me about the Sri Lankan brand "${brandName}". What do they do, what are they famous for, and what is their market position?`;
-            const result = await callGemini(prompt);
+           
             
             loading.classList.add('hidden');
             content.innerHTML = result.replace(/\n/g, '<br>');
